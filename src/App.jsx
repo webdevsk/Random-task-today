@@ -9,18 +9,27 @@ function App() {
 
   useEffect(() => {
     const controller1 = new AbortController()
-    // const controller2 = new AbortController()
+    const controller2 = new AbortController()
 
     const getData = async () => {
       try {
         const response1 = await axios.get('http://www.boredapi.com/api/activity/', {
           signal: controller1.signal
         })
-        const activity = await response1.data.activity
+        const activity = response1.data.activity
 
-        // const response2 = await axios.get()
+        const response2 = await axios.get(`https://api.pexels.com/v1/search?query=${activity}&orientation=landscape`, {
+          signal: controller2.signal,
+          headers: {
+            'Authorization': 'jgkskeNCnd4kGwZ2td4j2u50wgCgX7cNze9QmqG0sL6s7Wl8x4ATX9YO'
+          }
+        })
 
-        setData({activity: activity})
+        setData({
+          activity: response1.data,
+          photos: response2.data
+          })
+        
       } catch (error) {
         error.code !== 'ERR_CANCELED' && setError(error)
       } finally {
@@ -32,13 +41,11 @@ function App() {
     getData()
     return () => {
       controller1.abort()
-      // controller2.abort()
+      controller2.abort()
     }
   }, [])
   return (
     <>
-    <div className="flex flex-col justify-center items-center min-h-screen min-h-[100dvh] font-mulish">
-    
     {
       loading
       ? <Preloader />
@@ -46,9 +53,6 @@ function App() {
       ? <ErrorMsg error={error}/>
       : <RandomActivity data={data} />
     }
-      
-
-    </div>
     </>
   )
 }
@@ -58,9 +62,11 @@ export default App
 function Preloader(){
   return (
     <>
-    <h1 className=" text-4xl font-bold mb-4">What to do today?
-    </h1>
-    <h1 className="text-6xl  animate-pulse font-bold">Thinking...</h1>
+    <div className="flex flex-col justify-center items-center min-h-screen min-h-[100dvh] font-mulish">
+      <h1 className=" text-4xl font-bold mb-4">What to do today?
+      </h1>
+      <h1 className="text-6xl  animate-pulse font-bold">Thinking...</h1>
+    </div>
     </>
   )
 }
@@ -68,10 +74,29 @@ function Preloader(){
 
 
 function RandomActivity({data}){
-  console.log(data.activity)
+  console.log(data)
+  const bgImage = data?.photos?.photos[0]?.src?.large
+  const bgStyle={
+    backgroundImage: `url(${bgImage})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover'
+  }
+
+  const activityStyle={
+    fontSize: 'clamp(2rem, 6vw, 5rem)',
+    fontWeight: '700',
+    textShadow: '2px 2px 0px black',
+    color: '#ffffffeb'
+  }
   return(
     <>
-    <h1>{data.activity}</h1>
+    
+    <div style={bgStyle} className="flex flex-col justify-center items-center min-h-screen min-h-[100dvh] font-mulish">
+
+      <h1 style={activityStyle}>{data?.activity?.activity}</h1>
+
+    </div>
+    {/* <h1>{data?.todo?.title}</h1> */}
     </>
   )
 }
@@ -79,6 +104,8 @@ function RandomActivity({data}){
 function ErrorMsg({error}){
   console.log(error)
   return(
-    <h1 style={{color: 'red'}}>{error.message}</h1>
+    <div className="flex flex-col justify-center items-center min-h-screen min-h-[100dvh] font-mulish">
+      <h1 style={{color: 'red'}}>{error.message}</h1>
+    </div>
   )
 }
