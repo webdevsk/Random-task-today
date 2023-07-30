@@ -17,18 +17,19 @@ function App() {
           signal: controller1.signal
         })
         const activity = response1.data.activity
-
-        const response2 = await axios.get(`https://api.pexels.com/v1/search?query=${activity}&orientation=landscape`, {
+        const key = import.meta.env.UNSPLASH_ACCESS_KEY
+        const response2 = await axios.get(`https://api.unsplash.com/search/photos?query=${activity}`, {
           signal: controller2.signal,
           headers: {
-            'Authorization': 'jgkskeNCnd4kGwZ2td4j2u50wgCgX7cNze9QmqG0sL6s7Wl8x4ATX9YO'
+            'Accept-Version': 'v1',
+            'Authorization': `Client-ID rW2dROgMpBgtZbOMwpIgBJv2gTn3ZY0dd86JIJQqZGY`,
           }
         })
 
         setData({
           activity: response1.data,
           photos: response2.data
-          })
+        })
         
       } catch (error) {
         error.code !== 'ERR_CANCELED' && setError(error)
@@ -44,17 +45,11 @@ function App() {
       controller2.abort()
     }
   }, [])
-  return (
-    <>
-    {
-      loading
-      ? <Preloader />
-      : error
-      ? <ErrorMsg error={error}/>
-      : <RandomActivity data={data} />
-    }
-    </>
-  )
+  return loading
+  ? <Preloader />
+  : error
+  ? <ErrorMsg error={error}/>
+  : <RandomActivity data={data} />
 }
 
 export default App
@@ -62,7 +57,7 @@ export default App
 function Preloader(){
   return (
     <>
-    <div className="flex flex-col justify-center items-center min-h-screen min-h-[100dvh] font-mulish">
+    <div className="flex flex-col justify-center items-center min-h-screen min-h-[100dvh]">
       <h1 className=" text-4xl font-bold mb-4">What to do today?
       </h1>
       <h1 className="text-6xl  animate-pulse font-bold">Thinking...</h1>
@@ -74,26 +69,44 @@ function Preloader(){
 
 
 function RandomActivity({data}){
+  if (Object.keys(data).length === 0 && data.constructor === Object) return
   console.log(data)
-  const bgImage = data?.photos?.photos[0]?.src?.large
+  const {
+    color,
+    blur_hash, 
+    alt_description, 
+    urls, 
+    links:{html:sourcePage, download}, 
+    likes, 
+    user:{username, links:{html:creatorPage}},
+  } = data?.photos?.results[0]
+
+  console.log(color, blur_hash, alt_description, urls, sourcePage, download, likes, username, creatorPage)
+
+  const bgImage = urls.full
   const bgStyle={
     backgroundImage: `url(${bgImage})`,
     backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover'
+    backgroundSize: '100vw',
+    backgroundPosition: 'center',
   }
 
   const activityStyle={
-    fontSize: 'clamp(2rem, 6vw, 5rem)',
+    fontSize: 'clamp(2rem, 100px, 10vw)',
+    background: 'inherit',
+    backgroundClip: 'text',
+    WebkitBackgroundClip: 'text',
+    lineHeight: '1',
     fontWeight: '700',
-    textShadow: '2px 2px 0px black',
-    color: '#ffffffeb'
+    color: 'transparent',
+    textAlign: 'center',
+    filter: 'invert(1) grayscale(1) contrast(9)'
   }
   return(
     <>
     
-    <div style={bgStyle} className="flex flex-col justify-center items-center min-h-screen min-h-[100dvh] font-mulish">
-
-      <h1 style={activityStyle}>{data?.activity?.activity}</h1>
+    <div style={bgStyle} className="flex flex-col justify-center items-center min-h-screen min-h-[100dvh]">
+      <h1 style={activityStyle}>This could be a great day to {data?.activity?.activity}</h1>
 
     </div>
     {/* <h1>{data?.todo?.title}</h1> */}
@@ -104,7 +117,7 @@ function RandomActivity({data}){
 function ErrorMsg({error}){
   console.log(error)
   return(
-    <div className="flex flex-col justify-center items-center min-h-screen min-h-[100dvh] font-mulish">
+    <div className="flex flex-col justify-center items-center min-h-screen min-h-[100dvh]">
       <h1 style={{color: 'red'}}>{error.message}</h1>
     </div>
   )
