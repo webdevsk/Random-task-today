@@ -5,3 +5,11 @@
 body {
     font-family: 'DM Sans', sans-serif;
 }
+
+footer a{
+    @apply hover:underline;
+}
+
+.dynamicBG{
+    @apply flex justify-center items-center min-h-[100dvh]  min-h-screen overflow-x-hidden bg-center bg-no-repeat bg-cover;
+}
