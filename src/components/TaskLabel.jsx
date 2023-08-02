@@ -10,8 +10,8 @@ function TaskLabel({label}) {
 
   return (
       //Same background image but inverted for the text only
-      <div contentEditable spellCheck={false} style={style} suppressContentEditableWarning={true} className='dynamicBG !bg-clip-text text-transparent'>
-        <p className="p-4 text-center font-bold leading-none focus-visible:outline-none caret-transparent hover:caret-black">This could be a great day to {label}</p>
+      <div contentEditable spellCheck={false} style={style} suppressContentEditableWarning={true} className='dynamicBG !bg-clip-text text-transparent focus-visible:outline-none'>
+        <p className="p-4 sm:p-8 text-center font-bold leading-none caret-transparent hover:caret-black">This could be a great day to {label}</p>
       </div>
   )
 }

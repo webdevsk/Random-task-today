@@ -10,6 +10,7 @@ function TaskImage({imageObj, handleLoading, handleBackground}) {
   ? imageObj.urls.full
   : imageObj.urls.regular
   console.log(photoUrl)
+  
   useEffect(()=>{
     if (photoUrl === '') return
     setProgress('Downloading photo from Unsplash')

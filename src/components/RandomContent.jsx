@@ -4,7 +4,7 @@ import TaskLabel from './TaskLabel'
 import TaskImage from './TaskImage'
 import {ProgressContext} from "../App"
 
-export default function RandomContent(props){
+export default function RandomContent({handleLoading}){
   const [data, setData] = useState({})
   const [error, setError] = useState(null)
   const [background, setBackground] = useState({background: '#333333'})
@@ -17,58 +17,35 @@ export default function RandomContent(props){
         ? 'landscape'
         : 'portrait'
     )
-    const controller1 = new AbortController()
-    const controller2 = new AbortController()
+    const controller = new AbortController()
 
     const getData = async () => {
       try {
-        setProgress('Fetching activity from Bored Api')
-        const response1 = await axios.get('http://www.boredapi.com/api/activity/', {
-          signal: controller1.signal
-        })
-        const activity = response1.data.activity
-
-        setProgress('Fetching related photo from Unsplash Api')
-        const response2 = await axios.get(`https://api.unsplash.com/search/photos?query=${activity}&orientation=${getDeviceOrientation()}`, {
-          signal: controller2.signal,
-          headers: {
-            'Accept-Version': 'v1',
-            'Authorization': `Client-ID rW2dROgMpBgtZbOMwpIgBJv2gTn3ZY0dd86JIJQqZGY`,
-          }
-        })
-
+        setProgress('Calling some api\'s')
+        //Serverless function
+        const response = await axios.get(`/api/fetchApi?orientation=${getDeviceOrientation()}`)
+        console.log(response)
         setData({
-          task: response1.data,
-          images: response2.data
+          task: response.data.task,
+          images: response.data.images
         })
-        // setData({
-        //   task: {
-        //     "activity": "Wash your car",
-        //     "type": "busywork",
-        //     "participants": 1,
-        //     "price": 0.05,
-        //     "link": "",
-        //     "key": "1017771",
-        //     "accessibility": 0.15
-        // },
-        //   images: placeholderImg
-        // })
+
       } catch (error) {
-        error.code !== 'ERR_CANCELED' && setError(error)
+        setError(error)
       }
       
     }
     getData()
 
     return () => {
-      controller1.abort()
-      controller2.abort()
+      controller.abort()
     }
   }, [])
 
   //Returning Error message
   if (error){
     // console.log(error)
+    handleLoading(false)
     return(<h1 style={{color: 'red'}}>{error.message}</h1>)
   }
   
@@ -81,9 +58,9 @@ export default function RandomContent(props){
 
   return(
     <>
-    <div style={background} className={`${props.loading ? 'blur-sm' : 'blur-0'} dynamicBG`}>
+    <div style={background} className='bg-no-repeat bg-cover bg-center'>
       <TaskLabel label={label} imageObj={imageObj} />
-      <TaskImage imageObj={imageObj} {...props} handleBackground={handleBackground} />
+      <TaskImage imageObj={imageObj} handleLoading={handleLoading} handleBackground={handleBackground} />
     </div>
     </>
   )

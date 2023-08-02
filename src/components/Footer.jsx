@@ -2,7 +2,7 @@ import { faGithubSquare, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function Footer({imageObj}) {
-    const addRefer = (link) => link + '?utm_source=RandomActivity&utm_medium=referral'
+    const addRefer = (link) => link + '?utm_source=RandomActivityApp&utm_medium=referral'
   return (
     <footer className={`fixed left-0 bottom-0 w-full h-auto bg-black bg-opacity-70 text-white text-sm z-10`}>
         <div className="container mx-auto px-4 py-2 sm:px-8">
