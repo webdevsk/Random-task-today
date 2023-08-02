@@ -23,7 +23,7 @@ export default function RandomContent({handleLoading}){
       try {
         setProgress('Calling some api\'s')
         //Serverless function
-        const response = await axios.get(`/api/fetchApi?orientation=${getDeviceOrientation()}`)
+        const response = await axios.get(`/.netlify/functions/fetchApi?orientation=${getDeviceOrientation()}`)
         console.log(response)
         setData({
           task: response.data.task,
