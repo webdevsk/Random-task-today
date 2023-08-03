@@ -9,18 +9,16 @@ function TaskImage({imageObj, handleLoading, handleBackground}) {
   : window.outerWidth > 1920
   ? imageObj.urls.full
   : imageObj.urls.regular
-  console.log(photoUrl)
   
   useEffect(()=>{
     if (photoUrl === '') return
     setProgress('Downloading photo from Unsplash')
     let image = new Image()
     const handleLoaded = () => {
-      console.log('Loaded')
+      console.log('Image loaded successfully.')
       handleBackground({
         backgroundImage: `url(${photoUrl
       })`})
-      console.log('Image loaded')
       handleLoading(false)
     }
     image.addEventListener('load', handleLoaded)

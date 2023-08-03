@@ -12,19 +12,14 @@ export default function RandomContent({handleLoading}){
   const { setProgress } = useContext(ProgressContext)
 
   useEffect(() => {
-    const getDeviceOrientation = () => (
-        outerWidth >= outerHeight
-        ? 'landscape'
-        : 'portrait'
-    )
     const controller = new AbortController()
 
     const getData = async () => {
       try {
         setProgress('Calling some api\'s')
         //Serverless function
-        const response = await axios.get(`/.netlify/functions/fetchApi?orientation=${getDeviceOrientation()}`)
-        console.log(response)
+        const response = await axios.get(`/.netlify/functions/fetchApi`)
+        // console.log(response)
         setData({
           task: response.data.task,
           images: response.data.images
@@ -44,12 +39,11 @@ export default function RandomContent({handleLoading}){
 
   //Returning Error message
   if (error){
-    // console.log(error)
+    console.log(error)
     handleLoading(false)
     return(<h1 style={{color: 'red'}}>{error.message}</h1>)
   }
   
-  console.log(data)
   //Return nothing if object is empty
   if (Object.keys(data).length === 0 && data.constructor === Object) return null
 

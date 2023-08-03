@@ -5,11 +5,7 @@ export const handler = async(event, context) => {
         const response1 = await axios.get('http://www.boredapi.com/api/activity/')
         const task = response1.data
 
-        const deviceOrientation = 'orientation' in event.queryStringParameters 
-        ? event.queryStringParameters.orientation
-        : 'landscape'
-
-        const response2 = await axios.get(`https://api.unsplash.com/search/photos?query=${task.activity}&orientation=${deviceOrientation}`, {
+        const response2 = await axios.get(`https://api.unsplash.com/search/photos?query=${task.activity}`, {
           headers: {
             'Accept-Version': 'v1',
             'Authorization': `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`,

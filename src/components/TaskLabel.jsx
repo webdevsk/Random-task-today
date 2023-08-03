@@ -1,6 +1,5 @@
 function TaskLabel({label}) {
     
-    console.log('TaskLabel Mounted with label: ', label)
     const style = {
       fontSize: 'clamp(2rem, 100px, 10vw)',
       filter: 'invert(1) grayscale(1) contrast(9)',
