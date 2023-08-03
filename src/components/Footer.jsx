@@ -17,7 +17,7 @@ function Footer({imageObj}) {
                         <li className='w-full 2xl:w-auto md:text-end'>Project: <span className='font-semibold'>Random Task</span> by Mohammed Salman Khan
                             </li>
                         <li>
-                            <a className='flex flex-row items-center gap-x-2' href="https://github.com/webdevsk/" target='_blank' rel='noreferrer'>
+                            <a className='flex flex-row items-center gap-x-2' href="https://github.com/webdevsk/Random-task-today" target='_blank' rel='noreferrer'>
                                 <FontAwesomeIcon className={`w-5 h-5`} icon={faGithubSquare} />
                                 <span>Github</span>
                             </a>
